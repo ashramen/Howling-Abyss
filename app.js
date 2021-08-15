@@ -1,5 +1,6 @@
-const keys = require('./config');
 const { Client, Collection, Intents } = require('discord.js');
+const mongoose = require('mongoose');
+const keys = require('./config');
 const fs = require('fs');
 
 const client = new Client({ intents: [Intents.FLAGS.GUILDS] });
@@ -44,3 +45,13 @@ client.on('interactionCreate', async (interaction) => {
 });
 
 client.login(keys.token);
+
+mongoose
+	.connect(keys.mongodb_srv, {
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+		useCreateIndex: true,
+	})
+	.then(() => console.log('Connected to database'))
+	.catch((err) => console.log(err));

@@ -12,4 +12,4 @@ const summonerSchema = new mongoose.Schema({
 
 const summoner = mongoose.model('summoner', summonerSchema);
 
-module.expotrs = summoner;
+module.exports = summoner;
