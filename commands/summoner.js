@@ -11,7 +11,7 @@ module.exports = {
       option.setName('name').setDescription('summoner name').setRequired(true),
     ),
   async execute(interaction) {
-    const summonerName = interaction.options.getString('name');
+    let summonerName = interaction.options.getString('name');
     const reqURL = `https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/${summonerName}?api_key=${keys.riot_key}`;
     const summonerData = await fetch(reqURL)
       .then((response) => response.json())
@@ -23,24 +23,20 @@ module.exports = {
       await interaction.reply('Invalid summoner name 😦');
       return;
     }
-    const summonerId = await summonerData.id;
-    const summonerPuuid = await summonerData.puuid;
-    const summonerLevel = await summonerData.summonerLevel;
-    const summonerProfileIconId = await summonerData.profileIconId;
-
     let query = { userId: interaction.user.id },
       update = {
         serverId: interaction.guildId,
-        summonerName: summonerName,
-        summonerId: summonerId,
+        summonerName: summonerData.name,
+        summonerId: summonerData.id,
         summonerPuuid: summonerPuuid,
-        summonerLevel: summonerLevel,
-        summonerProfileIconId: summonerProfileIconId,
+        summonerLevel: summonerData.summonerLevel,
+        summonerProfileIconId: summonerData.profileIconId,
       },
       options = { upsert: true, new: true };
 
     summoner.findOneAndUpdate(query, update, options, function (error, result) {
       if (error) return;
+      result.save();
     });
     await interaction.reply(`Your summoner name has been saved! 😄`);
   },
