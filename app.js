@@ -18,6 +18,11 @@ for (const file of commandFiles) {
 
 client.once('ready', () => {
 	console.log('Ready!');
+	client.user.setPresence({
+		activities: [{ name: 'ARAM' }],
+		status: 'online',
+	});
+	client.user.setUsername('Howling Abyss');
 });
 
 client.on('interactionCreate', async (interaction) => {
