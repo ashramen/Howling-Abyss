@@ -8,26 +8,36 @@ module.exports = {
     .setName('profile')
     .setDescription('View your summoner profile'),
   async execute(interaction) {
-    const version = await fetch(
-      'https://ddragon.leagueoflegends.com/api/versions.json',
-    )
-      .then((response) => response.json())
-      .then((response) => response[0]);
+    let version = '11.16.1';
     var retEmbed;
     await summoner.findOne(
       { userId: interaction.user.id },
-      async function (err, existingUser) {
+      async function (err, user) {
         if (err) return;
-        if (!existingUser) {
-          await interaction.reply('Use /summoner to add your account!');
+        if (!user) {
+          await interaction.reply('Use /summoner to register your account!');
           return;
         } else {
           retEmbed = new MessageEmbed()
-            .setTitle(`✨Summoner: ${existingUser.summonerName}`)
+            .setTitle(`✨Summoner: ${user.summonerName}`)
             .setDescription('Welcome to the Howling Abyss!')
             .setColor('#87ceeb')
             .setThumbnail(
-              `http://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${existingUser.summonerProfileIconId}.png`,
+              `http://ddragon.leagueoflegends.com/cdn/${version}/img/profileicon/${user.summonerProfileIconId}.png`,
+            )
+            .addFields(
+              { name: 'Level:', value: `${user.summonerLevel}` },
+              { name: '\u200B', value: '\u200B' },
+              {
+                name: 'Last ARAM:',
+                value: 'Some value here',
+                inline: true,
+              },
+              {
+                name: 'Inline field title',
+                value: 'Some value here',
+                inline: true,
+              },
             );
         }
       },
