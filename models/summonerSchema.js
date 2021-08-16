@@ -8,7 +8,7 @@ const summonerSchema = new mongoose.Schema({
   summonerPuuid: String,
   summonerLevel: Number,
   summonerProfileIconId: Number,
-  summonerPfp: String,
+  summonerNameLowerCase: String,
 });
 
 const summoner = mongoose.model('summoner', summonerSchema);

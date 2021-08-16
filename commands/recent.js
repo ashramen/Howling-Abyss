@@ -69,7 +69,7 @@ module.exports = {
           }
           let retEmbed = new MessageEmbed()
             .setTitle(`⚔️ ${user.summonerName}'s Recent Matches`)
-            .setDescription('You win some, you lose some');
+            .setDescription('You win some, you lose some 😉');
           let matchArray = [];
           for (let [game, res] of matchMap) {
             let winEmoji = res.win === 'Win' ? '✅' : '❌';

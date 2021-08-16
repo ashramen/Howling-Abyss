@@ -35,12 +35,23 @@ async function fetchVersionJSON() {
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('profile')
-    .setDescription('View your summoner profile'),
+    .setDescription('View your summoner profile')
+    .addStringOption((option) =>
+      option.setName('name').setDescription('Summoner name'),
+    ),
   async execute(interaction) {
     await interaction.deferReply();
     const version = await fetchVersionJSON();
 
     const getUser = async function (interaction) {
+      if (interaction.options.getString('name')) {
+        sumName = interaction.options.getString('name').toLowerCase();
+        try {
+          return await summoner.findOne({ summonerNameLowerCase: sumName });
+        } catch (err) {
+          console.log(err);
+        }
+      }
       try {
         return await summoner.findOne({ userId: interaction.user.id });
       } catch (err) {
@@ -49,7 +60,10 @@ module.exports = {
     };
     getUser(interaction).then((user) => {
       if (!user) {
-        interaction.editReply('Use /summoner to register your account!');
+        console.log('summoner not found');
+        interaction.editReply(
+          'Summoner not registered. Use /summoner to register your account!',
+        );
         return;
       } else {
         getTopChamp(user, version).then((topChamp) => {

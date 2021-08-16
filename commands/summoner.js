@@ -32,6 +32,7 @@ module.exports = {
         summonerPuuid: summonerData.puuid,
         summonerLevel: summonerData.summonerLevel,
         summonerProfileIconId: summonerData.profileIconId,
+        summonerNameLowerCase: summonerData.name.toLowerCase(),
       },
       options = { upsert: true, new: true };
 
