@@ -4,11 +4,21 @@ const { MessageEmbed } = require('discord.js');
 const keys = require('../config');
 const fetch = require('node-fetch');
 
-async function getTopChamp(user) {
+async function getTopChamp(user, version) {
   const masteries = await fetch(
     `https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${user.summonerId}?api_key=${keys.riot_key}`,
   ).then((response) => response.json());
-  const topChamp = masteries[0].championId;
+  const topChampId = masteries[0].championId;
+  const championData = await fetch(
+    `http://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/champion.json`,
+  ).then((response) => response.json());
+  const championList = championData.data;
+  let topChamp = '';
+  for (var i in championList) {
+    if (championList[i].key == topChampId) {
+      topChamp = championList[i].name;
+    }
+  }
   return topChamp;
 }
 
@@ -41,7 +51,7 @@ module.exports = {
         interaction.editReply('Use /summoner to register your account!');
         return;
       } else {
-        getTopChamp(user).then((topChamp) => {
+        getTopChamp(user, version).then((topChamp) => {
           const retEmbed = new MessageEmbed()
             .setTitle(`✨Summoner: ${user.summonerName}`)
             .setDescription('Welcome to the Howling Abyss!')
