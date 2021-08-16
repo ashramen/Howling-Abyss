@@ -39,16 +39,25 @@ module.exports = {
               win: userInfo.win ? 'Win' : 'Loss',
               kills: userInfo.kills,
               deaths: userInfo.deaths,
+              assists: userInfo.assists,
               spree: userInfo.largestKillingSpree,
             };
-            matchMap.set(match, [champ]);
+            matchMap.set(match, champ);
           }
           let retEmbed = new MessageEmbed()
             .setTitle(`⚔️ ${user.summonerName}'s Recent Matches`)
             .setDescription('You win some, you lose some');
-          // for (let [key, value] of matchMap) {
-          //   console.log(key, value);
-          // }
+          let matchArray = [];
+          for (let [game, res] of matchMap) {
+            matchArray.push({
+              title: `${res.win} - ${res.champName}`,
+              val: `${res.kills}/${res.deaths}/${res.assists}`,
+              inl: false,
+            });
+          }
+          for (let game of matchArray) {
+            retEmbed.addField(game.title, game.val, game.inl);
+          }
           await interaction.editReply({ embeds: [retEmbed] });
         }
       },
