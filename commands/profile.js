@@ -64,7 +64,7 @@ module.exports = {
               { name: 'Level:', value: `${user.summonerLevel}` },
               {
                 name: 'Top Champion:',
-                value: `${topChamp[0].name}, ${topChamp[0].title}: ${topChamp[1]}`,
+                value: `${topChamp[0].name}, ${topChamp[0].title}: ${topChamp[1]} mastery points`,
                 inline: true,
               },
             );

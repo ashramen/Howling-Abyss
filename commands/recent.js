@@ -4,6 +4,12 @@ const summoner = require('../models/summonerSchema');
 const keys = require('../config');
 const { MessageEmbed } = require('discord.js');
 
+function getMilliToDuration(millis) {
+  var minutes = Math.floor(millis / 60000);
+  var seconds = ((millis % 60000) / 1000).toFixed(0);
+  return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('recent')
@@ -16,7 +22,9 @@ module.exports = {
       async function (err, user) {
         if (err) return;
         if (!user) {
-          await interaction.reply('Use /summoner to register your account!');
+          await interaction.editReply(
+            'Use /summoner to register your account!',
+          );
           return;
         } else {
           const recentMatchesURL = `https://americas.api.riotgames.com/lol/match/v5/matches/by-puuid/${user.summonerPuuid}/ids?queue=450&start=0&count=10&api_key=${keys.riot_key}`;
@@ -39,6 +47,7 @@ module.exports = {
                 day: 'numeric',
               })
               .slice(0, -6);
+            const gameDur = getMilliToDuration(matchInfo.info.gameDuration);
             userInfo = matchInfo.info.participants[index];
             const champ = {
               champLevel: userInfo.champLevel,
@@ -54,6 +63,7 @@ module.exports = {
               totalMitigated: userInfo.totalDamageTaken,
               totalHealed: userInfo.totalHeal,
               totalShielded: userInfo.totalDamageShieldedOnTeammates,
+              matchDuration: gameDur,
             };
             matchMap.set(match, champ);
           }
@@ -65,8 +75,8 @@ module.exports = {
             let winEmoji = res.win === 'Win' ? '✅' : '❌';
             matchArray.push({
               title: `${winEmoji} ${res.win} - ${res.champName}  ${res.start}`,
-              val: `KDA: ${res.kills}/${res.deaths}/${res.assists}
-              🗡: ${res.totalDamage} ⛰: ${res.totalMitigated} 🏥: ${res.totalHealed} 🛡: ${res.totalShielded}`,
+              val: `⬛  KDA: ${res.kills}/${res.deaths}/${res.assists}
+              ⬛  Duration: ${res.matchDuration}`,
               inl: false,
             });
           }
