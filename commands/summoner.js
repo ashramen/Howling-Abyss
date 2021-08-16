@@ -20,7 +20,7 @@ module.exports = {
       });
     if (summonerData.status) {
       console.log('Invalid');
-      await interaction.reply('Invalid summoner name 😦');
+      interaction.reply('Invalid summoner name 😦');
       return;
     }
     let query = { userId: interaction.user.id },
@@ -28,16 +28,21 @@ module.exports = {
         serverId: interaction.guildId,
         summonerName: summonerData.name,
         summonerId: summonerData.id,
-        summonerPuuid: summonerPuuid,
+        summonerPuuid: summonerData.puuid,
         summonerLevel: summonerData.summonerLevel,
         summonerProfileIconId: summonerData.profileIconId,
       },
       options = { upsert: true, new: true };
 
-    summoner.findOneAndUpdate(query, update, options, function (error, result) {
-      if (error) return;
-      result.save();
-    });
+    summoner.findOneAndUpdate(
+      query,
+      update,
+      options,
+      async function (error, result) {
+        if (error) return;
+        await result.save();
+      },
+    );
     await interaction.reply(`Your summoner name has been saved! 😄`);
   },
 };
