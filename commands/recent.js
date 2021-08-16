@@ -31,6 +31,9 @@ module.exports = {
             index = matchInfo.metadata.participants.findIndex(
               (name) => name === user.summonerPuuid,
             );
+            const startTime = new Date(
+              matchInfo.info.gameCreation,
+            ).toLocaleDateString();
             userInfo = matchInfo.info.participants[index];
             const champ = {
               champLevel: userInfo.champLevel,
@@ -41,6 +44,7 @@ module.exports = {
               deaths: userInfo.deaths,
               assists: userInfo.assists,
               spree: userInfo.largestKillingSpree,
+              start: startTime,
             };
             matchMap.set(match, champ);
           }
@@ -49,8 +53,9 @@ module.exports = {
             .setDescription('You win some, you lose some');
           let matchArray = [];
           for (let [game, res] of matchMap) {
+            let winEmoji = res.win === 'Win' ? '✅' : '❌';
             matchArray.push({
-              title: `${res.win} - ${res.champName}`,
+              title: `${winEmoji} ${res.win} - ${res.champName}  ${res.start}`,
               val: `${res.kills}/${res.deaths}/${res.assists}`,
               inl: false,
             });
