@@ -31,9 +31,14 @@ module.exports = {
             index = matchInfo.metadata.participants.findIndex(
               (name) => name === user.summonerPuuid,
             );
-            const startTime = new Date(
-              matchInfo.info.gameCreation,
-            ).toLocaleDateString();
+            const startTime = new Date(matchInfo.info.gameCreation)
+              .toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })
+              .slice(0, -6);
             userInfo = matchInfo.info.participants[index];
             const champ = {
               champLevel: userInfo.champLevel,
@@ -45,6 +50,10 @@ module.exports = {
               assists: userInfo.assists,
               spree: userInfo.largestKillingSpree,
               start: startTime,
+              totalDamage: userInfo.totalDamageDealtToChampions,
+              totalMitigated: userInfo.totalDamageTaken,
+              totalHealed: userInfo.totalHeal,
+              totalShielded: userInfo.totalDamageShieldedOnTeammates,
             };
             matchMap.set(match, champ);
           }
@@ -56,7 +65,8 @@ module.exports = {
             let winEmoji = res.win === 'Win' ? '✅' : '❌';
             matchArray.push({
               title: `${winEmoji} ${res.win} - ${res.champName}  ${res.start}`,
-              val: `${res.kills}/${res.deaths}/${res.assists}`,
+              val: `KDA: ${res.kills}/${res.deaths}/${res.assists}
+              🗡: ${res.totalDamage} ⛰: ${res.totalMitigated} 🏥: ${res.totalHealed} 🛡: ${res.totalShielded}`,
               inl: false,
             });
           }
