@@ -2,6 +2,7 @@ const keys = require('../config');
 const summoner = require('../models/summonerSchema');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const fetch = require('node-fetch');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
