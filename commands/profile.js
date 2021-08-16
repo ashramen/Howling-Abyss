@@ -3,14 +3,32 @@ const summoner = require('../models/summonerSchema');
 const { MessageEmbed } = require('discord.js');
 const keys = require('../config');
 const fetch = require('node-fetch');
-const getTopChamp = require('../command-helpers/topChamp.js');
-const fetchVersionJSON = require('../command-helpers/getVersion');
+
+async function getTopChamp(user) {
+  const masteries = await fetch(
+    `https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${user.summonerId}?api_key=${keys.riot_key}`,
+  ).then((response) => response.json());
+  const topChamp = masteries[0].championId;
+  return topChamp;
+}
+
+async function fetchVersionJSON() {
+  const versionData = await fetch(
+    `https://ddragon.leagueoflegends.com/api/versions.json`,
+  )
+    .then((response) => response.json())
+    .then((versions) => versions[0]);
+  return versionData;
+}
+
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('profile')
     .setDescription('View your summoner profile'),
   async execute(interaction) {
     await interaction.deferReply();
+    const version = await fetchVersionJSON();
+
     const getUser = async function (interaction) {
       try {
         return await summoner.findOne({ userId: interaction.user.id });
@@ -23,10 +41,6 @@ module.exports = {
         interaction.editReply('Use /summoner to register your account!');
         return;
       } else {
-        let version;
-        fetchVersionJSON().then((version) => {
-          version = version[0];
-        });
         getTopChamp(user).then((topChamp) => {
           const retEmbed = new MessageEmbed()
             .setTitle(`✨Summoner: ${user.summonerName}`)
