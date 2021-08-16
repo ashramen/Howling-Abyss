@@ -2,12 +2,14 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const fetch = require('node-fetch');
 const summoner = require('../models/summonerSchema');
 const keys = require('../config');
+const { MessageEmbed } = require('discord.js');
 
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('recent')
     .setDescription('View your recent ARAM matches'),
   async execute(interaction) {
+    await interaction.deferReply();
     const userId = interaction.user.id;
     await summoner.findOne(
       { userId: interaction.user.id },
@@ -21,9 +23,8 @@ module.exports = {
           const recentMatches = await fetch(recentMatchesURL).then((response) =>
             response.json(),
           );
-          console.log(recentMatches);
           const matchMap = new Map();
-          recentMatches.forEach(async function (match) {
+          for (match of recentMatches) {
             const matchInfo = await fetch(
               `https://americas.api.riotgames.com/lol/match/v5/matches/${match}?api_key=${keys.riot_key}`,
             ).then((response) => response.json());
@@ -31,24 +32,26 @@ module.exports = {
               (name) => name === user.summonerPuuid,
             );
             userInfo = matchInfo.info.participants[index];
-            console.log(userInfo);
             const champ = {
               champLevel: userInfo.champLevel,
-              champId: userInfo.champId,
+              champId: userInfo.championId,
               champName: userInfo.championName,
-            };
-            const kda = {
               win: userInfo.win ? 'Win' : 'Loss',
               kills: userInfo.kills,
               deaths: userInfo.deaths,
               spree: userInfo.largestKillingSpree,
             };
-            matchMap.set(match, [champ, kda]);
-            console.log(matchMap);
-          });
+            matchMap.set(match, [champ]);
+          }
+          let retEmbed = new MessageEmbed()
+            .setTitle(`⚔️ ${user.summonerName}'s Recent Matches`)
+            .setDescription('You win some, you lose some');
+          // for (let [key, value] of matchMap) {
+          //   console.log(key, value);
+          // }
+          await interaction.editReply({ embeds: [retEmbed] });
         }
       },
     );
-    await interaction.reply('Pong!');
   },
 };

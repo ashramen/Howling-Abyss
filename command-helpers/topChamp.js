@@ -10,10 +10,7 @@ const participants = [
   'vLDwsIbVlfRucAvMp65C7WEfugi1cjWYc2VeinQbqs9N6LaptTDRX-KJe_8sz_WW2I9tMSy88vAKAg',
   '9dkXLmxpUkVtD5ElGKLixgOj1EWiVU5qLmKD320wzFDwka0ykXdkLL3438WfkpgEOPLbRYTni6ULbw',
 ];
-console.log(
-  participants.findIndex(
-    (name) =>
-      name ===
-      'gMZ0dc13yMtqBkkhY812Dzj7Wenrsyg_hRrjZIDdxC8rdtwqzpWKVvaBaxHyXmHsN1bNBwlI2k36UQ',
-  ),
-);
+
+let map = new Map();
+participants.forEach((part) => map.set(part, 0));
+console.log(map);
