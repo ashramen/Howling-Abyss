@@ -9,6 +9,7 @@ async function getTopChamp(user, version) {
     `https://na1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-summoner/${user.summonerId}?api_key=${keys.riot_key}`,
   ).then((response) => response.json());
   const topChampId = masteries[0].championId;
+  const topChampPoints = masteries[0].championPoints;
   const championData = await fetch(
     `http://ddragon.leagueoflegends.com/cdn/${version}/data/en_US/champion.json`,
   ).then((response) => response.json());
@@ -16,10 +17,10 @@ async function getTopChamp(user, version) {
   let topChamp = '';
   for (var i in championList) {
     if (championList[i].key == topChampId) {
-      topChamp = championList[i].name;
+      topChamp = championList[i];
     }
   }
-  return topChamp;
+  return [topChamp, topChampPoints];
 }
 
 async function fetchVersionJSON() {
@@ -63,7 +64,7 @@ module.exports = {
               { name: 'Level:', value: `${user.summonerLevel}` },
               {
                 name: 'Top Champion:',
-                value: `${topChamp}: 392,372`,
+                value: `${topChamp[0].name}, ${topChamp[0].title}: ${topChamp[1]}`,
                 inline: true,
               },
             );
