@@ -1,4 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
+const { Kayn, REGIONS } = require('kayn');
+const keys = require('../config');
+
+const kayn = Kayn('RGAPI-my-api-key');
 
 module.exports = {
   data: new SlashCommandBuilder()

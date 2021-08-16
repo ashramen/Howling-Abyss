@@ -1,7 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const summoner = require('../models/summonerSchema');
 const { MessageEmbed } = require('discord.js');
-const fetch = require('node-fetch');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -27,9 +26,8 @@ module.exports = {
             )
             .addFields(
               { name: 'Level:', value: `${user.summonerLevel}` },
-              { name: '\u200B', value: '\u200B' },
               {
-                name: 'Last ARAM:',
+                name: 'Top Champion:',
                 value: 'Some value here',
                 inline: true,
               },
