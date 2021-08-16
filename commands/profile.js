@@ -3,30 +3,32 @@ const summoner = require('../models/summonerSchema');
 const { MessageEmbed } = require('discord.js');
 const keys = require('../config');
 const fetch = require('node-fetch');
-
+const getTopChamp = require('../command-helpers/topChamp.js');
+const fetchVersionJSON = require('../command-helpers/getVersion');
 module.exports = {
   data: new SlashCommandBuilder()
     .setName('profile')
     .setDescription('View your summoner profile'),
   async execute(interaction) {
     await interaction.deferReply();
-    let version = '11.16.1';
-    var retEmbed;
-    await summoner.findOne(
-      { userId: interaction.user.id },
-      async function (err, user) {
-        if (err) return;
-        if (!user) {
-          await interaction.reply('Use /summoner to register your account!');
-          return;
-        } else {
-          // topChamp =
-          //   await fetch(`https://na1.api.riotgames.com/lol/champion-mastery/v4/
-          // champion-masteries/by-summoner/${user.summonerId}?api_key=${keys.riot_key}`).then(
-          //     (response) => response.json(),
-          //   );
-          // console.log(topChamp);
-          retEmbed = new MessageEmbed()
+    const getUser = async function (interaction) {
+      try {
+        return await summoner.findOne({ userId: interaction.user.id });
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getUser(interaction).then((user) => {
+      if (!user) {
+        interaction.editReply('Use /summoner to register your account!');
+        return;
+      } else {
+        let version;
+        fetchVersionJSON().then((version) => {
+          version = version[0];
+        });
+        getTopChamp(user).then((topChamp) => {
+          const retEmbed = new MessageEmbed()
             .setTitle(`✨Summoner: ${user.summonerName}`)
             .setDescription('Welcome to the Howling Abyss!')
             .setColor('#87ceeb')
@@ -37,13 +39,13 @@ module.exports = {
               { name: 'Level:', value: `${user.summonerLevel}` },
               {
                 name: 'Top Champion:',
-                value: 'Some value here',
+                value: `${topChamp}: 392,372`,
                 inline: true,
               },
             );
-        }
-      },
-    );
-    await interaction.editReply({ embeds: [retEmbed] });
+          return interaction.editReply({ embeds: [retEmbed] });
+        });
+      }
+    });
   },
 };
