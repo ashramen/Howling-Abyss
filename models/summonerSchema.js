@@ -11,6 +11,6 @@ const summonerSchema = new mongoose.Schema({
   summonerNameLowerCase: String,
 });
 
-const Summoner = mongoose.model('summoner', summonerSchema);
+const Summoner = mongoose.model('Summoner', summonerSchema);
 
 module.exports = Summoner;
