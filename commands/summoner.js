@@ -1,5 +1,5 @@
 const keys = require('../config');
-const summoner = require('../models/summonerSchema');
+const Summoner = require('../models/summonerSchema');
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const fetch = require('node-fetch');
 const { MessageEmbed } = require('discord.js');
@@ -36,7 +36,7 @@ module.exports = {
       },
       options = { upsert: true, new: true };
 
-    summoner.findOneAndUpdate(
+    Summoner.findOneAndUpdate(
       query,
       update,
       options,

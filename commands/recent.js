@@ -1,6 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const fetch = require('node-fetch');
-const summoner = require('../models/summonerSchema');
+const Summoner = require('../models/summonerSchema');
 const keys = require('../config');
 const { MessageEmbed } = require('discord.js');
 
@@ -17,7 +17,7 @@ module.exports = {
   async execute(interaction) {
     await interaction.deferReply();
     const userId = interaction.user.id;
-    await summoner.findOne(
+    await Summoner.findOne(
       { userId: interaction.user.id },
       async function (err, user) {
         if (err) return;

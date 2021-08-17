@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const summoner = require('../models/summonerSchema');
+const Summoner = require('../models/summonerSchema');
 const { MessageEmbed } = require('discord.js');
 const keys = require('../config');
 const fetch = require('node-fetch');
@@ -47,13 +47,13 @@ module.exports = {
       if (interaction.options.getString('name')) {
         sumName = interaction.options.getString('name').toLowerCase();
         try {
-          return await summoner.findOne({ summonerNameLowerCase: sumName });
+          return await Summoner.findOne({ summonerNameLowerCase: sumName });
         } catch (err) {
           console.log(err);
         }
       }
       try {
-        return await summoner.findOne({ userId: interaction.user.id });
+        return await Summoner.findOne({ userId: interaction.user.id });
       } catch (err) {
         console.log(err);
       }
