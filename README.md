@@ -25,9 +25,13 @@ Howling Abyss is a Discord bot that offers quick, accurate information on the us
 |  /build |  Sends a link to the optimal build, runes, and skill order for champion | /build champion (required)  |
 | /recent | Shows the user's 10 most recent games | /recent |
 
-### Demo
+## Demo
 #### Summoner
+![](https://i.imgur.com/Z0qsULr.gif)
 #### Profile
+![](https://i.imgur.com/dPChHd1.gif)
 #### Build
+![](https://i.imgur.com/yM2RtXo.gif)
 #### Recent
+![](https://i.imgur.com/SYJ0cCD.gif)
 
