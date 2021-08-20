@@ -1,7 +1,7 @@
 # ❄️ Welcome to the Howling Abyss! ❄️
 Howling Abyss is a Discord bot that offers quick, accurate information on the user's LoL profile and ARAM statistics using simple commands and a visually pleasing UI 
 
-<img src="https://cdn1.dotesports.com/wp-content/uploads/2020/10/03111644/Howling-Abyss-Legends-of-Runeterra-Teaser.png" width="800"/>
+<img src="https://cdn1.dotesports.com/wp-content/uploads/2020/10/03111644/Howling-Abyss-Legends-of-Runeterra-Teaser.png" width="600"/>
 
 ### The purpose of this project is to learn and practice concepts related to: 
 - Using asynchronous functions and promises effectively 
